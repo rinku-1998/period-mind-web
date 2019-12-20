@@ -1,0 +1,6 @@
+.vscode/
+app/static/images/*
+
+app.db
+.flaskenv
+.env
