@@ -15,6 +15,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
+    login.login_view = 'main.login'
     configure_uploads(app, upload)
     
     from app.main import bp as main_bp
