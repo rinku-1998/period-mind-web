@@ -1,4 +1,4 @@
-from app import db, login
+from app import db, api_login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -25,7 +25,7 @@ class Account(UserMixin, db.Model):
     def id(self):
         return self.accountID
 
-@login.user_loader
+@api_login.user_loader
 def load_account(id):
     return Account.query.get(int(id))
 

@@ -1,14 +1,16 @@
-from app import db, login, upload
+from app import db, api_login, upload
 from app.api.forms import LoginForm, PostForm, RegisterForm, EditProfileForm
 from app.api.models import Account, Post, Category
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app.api import bp
 
 from datetime import datetime
+from app.api.sql2ary import sql2ary
 import hashlib
+
 
 @bp.route('/index')
 @login_required
@@ -16,8 +18,8 @@ def index():
     # Load with SQL syntax
     syntax = 'SELECT account.username, post.* FROM post JOIN account ON account.accountID == post.accountID ORDER BY post.postTime desc'
     result = db.session.execute(syntax)
-    for r in result:
-        print(r)
+    posts = sql2ary(result)
+    # print(result)
     # Load with DB-ORM
     # posts = Post.query.join(Account).filter(Account.accountID == Post.accountID).all()
     # posts = Post.query.join(Account, (Account.accountID == Post.accountID)).all()
@@ -27,8 +29,8 @@ def index():
     # for post in posts:
     #     print(vars(post))
     # return render_template('index.html', posts=posts)
-    return 'ok'
-
+    return jsonify(posts)
+    
 @bp.route('/post', methods=['GET', 'POST'])
 @login_required
 def post():

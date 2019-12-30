@@ -5,7 +5,8 @@ from flask_uploads import UploadSet, IMAGES, configure_uploads
 
 db = SQLAlchemy()
 migrate = Migrate()
-login = LoginManager()
-login.login_view = 'login'
+main_login = LoginManager()
+api_login = LoginManager()
+# login.login_view = 'login'
 upload = UploadSet(name='images', extensions=IMAGES)
 # configure_uploads(app, upload)
