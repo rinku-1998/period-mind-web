@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for post in posts %}
+<p>{{ post.accountName }}</p>
+<p>{{ post.postContent }}</p>
+<p>{{ post.postImage }}</p>
+<p>{{ post.postLikeNumber }}</p>
+<p>{{ post.postLocation }}</p>
+<p>{{ post.postTime }}</p>
+{% endfor %}
+{% endblock %}

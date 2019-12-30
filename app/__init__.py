@@ -15,11 +15,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
-    login.login_view = 'main.login'
+    login.login_view = 'api.login'
     configure_uploads(app, upload)
     
-    from app.main import bp as main_bp
-    app.register_blueprint(main_bp)
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)

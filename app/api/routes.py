@@ -1,16 +1,15 @@
 from app import db, login, upload
-from app.main.forms import LoginForm, PostForm, RegisterForm, EditProfileForm
-from app.main.models import Account, Post, Category
+from app.api.forms import LoginForm, PostForm, RegisterForm, EditProfileForm
+from app.api.models import Account, Post, Category
 
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.main import bp
+from app.api import bp
 
 from datetime import datetime
 import hashlib
 
-@bp.route('/')
 @bp.route('/index')
 @login_required
 def index():
@@ -56,17 +55,17 @@ def post():
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('api.index'))
     form = LoginForm()
     if form.validate_on_submit():
         account = Account.query.filter_by(email=form.email.data).first()
         if account is None or not account.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect(url_for('main.login'))
+            return redirect(url_for('api.login'))
         login_user(account, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('main.index')
+            next_page = url_for('api.index')
         return redirect(next_page)
     else:
         print(form.errors)
@@ -75,7 +74,7 @@ def login():
 @bp.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('api.index'))
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -88,7 +87,7 @@ def register():
         db.session.add(account)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('main.login'))
+        return redirect(url_for('api.login'))
     return render_template('register.html', form=form)
 
 @bp.route('/user/<username>')
