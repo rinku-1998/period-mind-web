@@ -1,8 +1,8 @@
-"""Create tables
+"""Add createTime in Account
 
-Revision ID: f9c3abad84f7
+Revision ID: 720738a32562
 Revises: 
-Create Date: 2019-12-17 23:57:24.300449
+Create Date: 2019-12-31 17:10:59.502474
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f9c3abad84f7'
+revision = '720738a32562'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,6 +26,7 @@ def upgrade():
     sa.Column('displayName', sa.String(length=30), nullable=True),
     sa.Column('profileInfo', sa.String(length=100), nullable=True),
     sa.Column('avatar', sa.String(length=100), nullable=True),
+    sa.Column('createTime', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('accountID'),
     sa.UniqueConstraint('avatar')
     )

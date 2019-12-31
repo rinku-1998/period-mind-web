@@ -11,6 +11,7 @@ class Account(UserMixin, db.Model):
     displayName = db.Column(db.String(30), index=True)
     profileInfo = db.Column(db.String(100))
     avatar = db.Column(db.String(100), unique=True)
+    createTime = db.Column(db.DateTime)
     relation_postedAccount = db.relationship('Post', backref='account', lazy='select')
     relation_commentAccount = db.relationship('Comment', backref='account', lazy='select')
     relation_friendInAccount = db.relationship('Friend', backref='account', lazy='select')

@@ -110,13 +110,28 @@ def register():
         return redirect(url_for('api.index'))
     form = RegisterForm()
     if form.validate_on_submit():
-        account = Account(username=form.username.data, email=form.email.data, displayName=form.display_name.data)
+        account = Account(username=form.username.data, email=form.email.data, displayName=form.display_name.data, createTime=datetime.utcnow())
         account.set_password(form.password.data)
         db.session.add(account)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('api.login'))
     return render_template('register.html', form=form)
+
+@bp.route('/myprofile')
+@login_required
+def myprofile():
+    user = Account.query.filter_by(accountID=current_user.get_id()).first_or_404()
+    user_list = {}
+    if user:
+        user_list['username'] = user.username
+        user_list['display_name'] = user.displayName
+        user_list['email'] = user.email
+        user_list['profile_info'] = user.profileInfo
+        user_list['avatar'] = user.avatar
+        user_list['createTime'] = user.createTime
+
+    return jsonify(user_list)
 
 @bp.route('/user/<username>')
 def user(username):
@@ -128,6 +143,8 @@ def user(username):
         user_list['email'] = user.email
         user_list['profile_info'] = user.profileInfo
         user_list['avatar'] = user.avatar
+        user_list['createTime'] = user.createTime
+
     return jsonify(user_list)
 
 @bp.route('/editProfile', methods=['GET', 'POST'])
