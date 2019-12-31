@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from app.api.models import Account
 
@@ -36,3 +36,9 @@ class EditProfileForm(FlaskForm):
     display_name = StringField('顯示名稱', validators=[DataRequired()])
     profileInfo = StringField('個人簡介', validators=[DataRequired()])
     submit = SubmitField('確定更改')
+
+class CommentForm(FlaskForm):
+    postID = IntegerField('postID', validators=[DataRequired()])
+    commentContent = StringField('留言內容', validators=[DataRequired()])
+    commentImage = FileField('選擇檔案')
+    submit = SubmitField('留言')

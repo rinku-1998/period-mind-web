@@ -1,6 +1,6 @@
 from app import db, api_login, upload
-from app.api.forms import LoginForm, PostForm, RegisterForm, EditProfileForm
-from app.api.models import Account, Post, Category
+from app.api.forms import LoginForm, PostForm, RegisterForm, EditProfileForm, CommentForm
+from app.api.models import Account, Post, Category, Comment
 
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
@@ -54,6 +54,31 @@ def post():
 
     return render_template('post.html', form=form)
 
+@bp.route('/comment', methods=['GET', 'POST'])
+@login_required
+def comment():
+    form = CommentForm()
+    if form.validate_on_submit():
+        hashed_filename = None #Default for no file uploaded
+        if not form.commentImage.data.filename == '':
+            m = hashlib.md5()
+            current_time = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+            file_type = form.commentImage.data.filename.split('.')[-1]
+            hashed_filename = ('%s%s%s'%(current_user.get_id(), current_time, form.commentImage.data.filename))
+            m.update(hashed_filename.encode('utf-8'))
+            hashed_filename = ('%s.%s'%(m.hexdigest(), file_type))
+            filename = upload.save(form.commentImage.data, name=hashed_filename)
+            print(filename)
+            print(upload.url(filename))
+
+        comment = Comment(postID=form.postID.data, accountID=current_user.get_id(), commentContent=form.commentContent.data, commentTime=datetime.utcnow(), commentImage=hashed_filename)
+        db.session.add(comment)
+        db.session.commit()
+
+    return render_template('comment.html', form=form)
+
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -68,7 +93,8 @@ def login():
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('api.index')
-        return redirect(next_page)
+        # return redirect(next_page)
+        return 'ok'
     else:
         print(form.errors)
     return render_template('login.html', form=form)
@@ -81,7 +107,7 @@ def logout():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('api.index'))
     form = RegisterForm()
     if form.validate_on_submit():
         account = Account(username=form.username.data, email=form.email.data, displayName=form.display_name.data)
@@ -95,8 +121,14 @@ def register():
 @bp.route('/user/<username>')
 def user(username):
     user = Account.query.filter_by(username=username).first_or_404()
-    print(user.profileInfo)
-    return 'ok'
+    user_list = {}
+    if user:
+        user_list['username'] = user.username
+        user_list['display_name'] = user.displayName
+        user_list['email'] = user.email
+        user_list['profile_info'] = user.profileInfo
+        user_list['avatar'] = user.avatar
+    return jsonify(user_list)
 
 @bp.route('/editProfile', methods=['GET', 'POST'])
 @login_required

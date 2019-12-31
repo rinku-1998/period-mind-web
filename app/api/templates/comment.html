@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.postID.label }}<br>
+        {{ form.postID() }}
+    </p>
+    <p>
+        {{ form.commentContent.label }}<br>
+        {{ form.commentContent(size=50) }}
+    </p>
+    <p>
+        {{ form.commentImage.label }}<br>
+        {{ form.commentImage() }}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}

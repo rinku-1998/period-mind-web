@@ -11,3 +11,4 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOADED_IMAGES_DEST = os.path.join(basedir, 'app/static/images')
     UPLOADED_IMAGES_URL = 'app/static/images'
+    JSON_AS_ASCII = False
