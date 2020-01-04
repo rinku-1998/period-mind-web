@@ -8,7 +8,7 @@ from werkzeug.urls import url_parse
 from app.api import bp
 
 from datetime import datetime
-from app.api.sql2ary import sql2ary
+from app.api.sql2ary import sql2ary, comment_sql2ary
 import hashlib
 
 
@@ -76,6 +76,16 @@ def comment():
         db.session.commit()
 
     return render_template('comment.html', form=form)
+
+@bp.route('/getComment/<postID>', methods=['GET'])
+@login_required
+def getComment(postID):
+    syntax = 'SELECT account.username, comment.* FROM comment JOIN account ON account.accountID == comment.accountID ORDER BY comment.commentTime asc'
+    result = db.session.execute(syntax)
+    # print(result)
+    comments = comment_sql2ary(result)
+
+    return jsonify(comments)
 
 
 
