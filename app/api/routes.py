@@ -80,7 +80,7 @@ def comment():
 @bp.route('/getComment/<postID>', methods=['GET'])
 @login_required
 def getComment(postID):
-    syntax = 'SELECT account.username, comment.* FROM comment JOIN account ON account.accountID == comment.accountID ORDER BY comment.commentTime asc'
+    syntax = ('SELECT account.username, comment.* FROM comment JOIN account ON account.accountID == comment.accountID and comment.postID = %s ORDER BY comment.commentTime asc'%postID)
     result = db.session.execute(syntax)
     # print(result)
     comments = comment_sql2ary(result)
