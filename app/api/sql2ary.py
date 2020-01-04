@@ -12,7 +12,9 @@ def sql2ary(sql_result):
         result_dict['postLikeAccount'] = result[7]
         result_dict['postCheck'] = result[8]
         result_dict['postLocation'] = result[9]
-        result_dict['postTime'] = result[10]
+        time = result[10]
+        time_string = ("%s年%s月%s日 %s:%s"%(time[:4], time[5:7], time[8:10], time[11:13], time[14:16]))
+        result_dict['postTime'] = time_string
         sql_ary.append(result_dict)
        
     return sql_ary

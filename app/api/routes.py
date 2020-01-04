@@ -129,7 +129,10 @@ def myprofile():
         user_list['email'] = user.email
         user_list['profile_info'] = user.profileInfo
         user_list['avatar'] = user.avatar
-        user_list['createTime'] = user.createTime
+        time = user.createTime
+        time_string = datetime.strftime(time, '%Y-%m-%d')
+        time_element = time_string.split('-')
+        user_list['createTime'] = ('%s年%s月%s日 加入'%(time_element[0], time_element[1], time_element[2])) 
 
     return jsonify(user_list)
 
@@ -143,7 +146,10 @@ def user(username):
         user_list['email'] = user.email
         user_list['profile_info'] = user.profileInfo
         user_list['avatar'] = user.avatar
-        user_list['createTime'] = user.createTime
+        time = user.createTime
+        time_string = datetime.strftime(time, '%Y-%m-%d')
+        time_element = time_string.split('-')
+        user_list['createTime'] = ('%s年%s月%s日 加入'%(time_element[0], time_element[1], time_element[2])) 
 
     return jsonify(user_list)
 
