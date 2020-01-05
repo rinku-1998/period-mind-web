@@ -51,6 +51,7 @@ def post():
         post = Post(accountID=current_user.get_id(), postContent=form.postContent.data, postTime=datetime.utcnow(), postImage=hashed_filename)
         db.session.add(post)
         db.session.commit()
+        return 'ok'
 
     return render_template('post.html', form=form)
 
@@ -74,6 +75,7 @@ def comment():
         comment = Comment(postID=form.postID.data, accountID=current_user.get_id(), commentContent=form.commentContent.data, commentTime=datetime.utcnow(), commentImage=hashed_filename)
         db.session.add(comment)
         db.session.commit()
+        return 'ok'
 
     return render_template('comment.html', form=form)
 
@@ -125,7 +127,8 @@ def register():
         db.session.add(account)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('api.login'))
+        # return redirect(url_for('api.login'))
+        return 'ok'
     return render_template('register.html', form=form)
 
 @bp.route('/myprofile')
