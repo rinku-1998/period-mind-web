@@ -40,5 +40,5 @@ DATABASE_URL = mysql+pymysql://[SQL_USERNAME]:[SQL:PASSWORD]@[SQL_SERVER_URL]:[S
 # For development 
 flask run
 # For production deployment
-gunicorn -b localhost:port -w NUM_WORKER wsgi:app 
+gunicorn -b localhost:port -w NUM_WORKER wsgi:app -k eventlet 
 ```
